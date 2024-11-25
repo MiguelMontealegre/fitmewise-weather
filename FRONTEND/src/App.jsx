@@ -12,7 +12,6 @@ import { get5DaysForecast, getCityData } from "./Store/Slices/WeatherSlice.js";
 import { SphereSpinner } from "react-spinners-kit";
 
 function App() {
-  // redux state
   const {
     citySearchLoading,
     citySearchData,
@@ -21,32 +20,25 @@ function App() {
     forecastError,
   } = useSelector((state) => state.weather);
 
-  // main loadings state
   const [loadings, setLoadings] = useState(true);
 
-  // check if any of redux loading state is still true
   const allLoadings = [citySearchLoading, forecastLoading];
   useEffect(() => {
     const isAnyChildLoading = allLoadings.some((state) => state);
     setLoadings(isAnyChildLoading);
   }, [allLoadings]);
 
-  // city state
   const [city, setCity] = useState("Pereira");
 
-  // unit state
-  const [unit, setUnit] = useState("metric"); // metric = C and imperial = F
+  const [unit, setUnit] = useState("metric");
 
-  // toggle unit
   const toggleUnit = () => {
     setLoadings(true);
     setUnit(unit === "metric" ? "imperial" : "metric");
   };
 
-  // dispatch
   const dispatch = useDispatch();
 
-  // fetch data
   const fetchData = () => {
     dispatch(
       getCityData({
@@ -66,19 +58,19 @@ function App() {
     });
   };
 
-  // initial render
+
   useEffect(() => {
     fetchData();
   }, [unit]);
 
-  // handle city search
+
   const handleCitySearch = (e) => {
     e.preventDefault();
     setLoadings(true);
     fetchData();
   };
 
-  // function to filter forecast data based on the time of the first object
+
   const filterForecastByFirstObjTime = (forecastData) => {
     if (!forecastData) {
       return [];
@@ -93,7 +85,7 @@ function App() {
   return (
     <div className="background">
       <div className="box">
-        {/* city search form */}
+
         <form autoComplete="off" onSubmit={handleCitySearch}>
           <label>
             <Icon icon={search} size={20} />
@@ -110,14 +102,11 @@ function App() {
           <button type="submit">GO</button>
         </form>
 
-        {/* current weather details box */}
+
         <div className="current-weather-details-box">
-          {/* header */}
           <div className="details-box-header">
-            {/* heading */}
             <h4>Current Weather</h4>
 
-            {/* switch */}
             <div className="switch" onClick={toggleUnit}>
               <div
                 className={`switch-toggle ${unit === "metric" ? "c" : "f"}`}
@@ -142,7 +131,6 @@ function App() {
                     <>
                       {citySearchData && citySearchData.data ? (
                         <div className="weather-details-container">
-                          {/* details */}
                           <div className="details">
                             <h4 className="city-name">
                               {citySearchData.data.name}
@@ -161,15 +149,12 @@ function App() {
                             </h4>
                           </div>
 
-                          {/* metrices */}
                           <div className="metrices">
-                            {/* feels like */}
                             <h4>
                               Feels like {citySearchData.data.main.feels_like}
                               &deg;C
                             </h4>
 
-                            {/* min max temp */}
                             <div className="key-value-box">
                               <div className="key">
                                 <Icon
@@ -195,7 +180,6 @@ function App() {
                               </div>
                             </div>
 
-                            {/* humidity */}
                             <div className="key-value-box">
                               <div className="key">
                                 <Icon
@@ -212,7 +196,6 @@ function App() {
                               </div>
                             </div>
 
-                            {/* wind */}
                             <div className="key-value-box">
                               <div className="key">
                                 <Icon icon={wind} size={20} className="icon" />
@@ -223,7 +206,6 @@ function App() {
                               </div>
                             </div>
 
-                            {/* pressure */}
                             <div className="key-value-box">
                               <div className="key">
                                 <Icon
@@ -245,7 +227,6 @@ function App() {
                       ) : (
                         <div className="error-msg">No Data Found</div>
                       )}
-                      {/* extended forecastData */}
                       <h4 className="extended-forecast-heading">
                         Extended Forecast
                       </h4>
