@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { hostName } from "../../config/config";
 
-// get city data
+
 export const getCityData = createAsyncThunk("city", async (obj) => {
   try {
     const params = {city: obj.city, unit: obj.unit};
@@ -22,7 +22,7 @@ export const getCityData = createAsyncThunk("city", async (obj) => {
   }
 });
 
-// get 5 days forecast of the provided city
+
 export const get5DaysForecast = createAsyncThunk("5days", async (obj) => {
   const params = {unit: obj.unit, lat: obj.lat, lon: obj.lon};
   const request = await axios.get(
@@ -43,7 +43,6 @@ const weatherSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // city search
       .addCase(getCityData.pending, (state) => {
         state.citySearchLoading = true;
         state.citySearchData = null;
@@ -52,7 +51,6 @@ const weatherSlice = createSlice({
         state.citySearchLoading = false;
         state.citySearchData = action.payload;
       })
-      // forecast
       .addCase(get5DaysForecast.pending, (state) => {
         state.forecastLoading = true;
         state.forecastData = null;
