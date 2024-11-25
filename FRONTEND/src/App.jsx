@@ -58,18 +58,15 @@ function App() {
     });
   };
 
-
   useEffect(() => {
     fetchData();
   }, [unit]);
-
 
   const handleCitySearch = (e) => {
     e.preventDefault();
     setLoadings(true);
     fetchData();
   };
-
 
   const filterForecastByFirstObjTime = (forecastData) => {
     if (!forecastData) {
@@ -83,183 +80,160 @@ function App() {
   const filteredForecast = filterForecastByFirstObjTime(forecastData?.list);
 
   return (
-    <div className="background">
-      <div className="box">
-
-        <form autoComplete="off" onSubmit={handleCitySearch}>
-          <label>
+    <div className="min-h-screen bg-gradient-to-b from-blue-500 via-blue-200 to-blue-50 bg-fixed bg-cover bg-center p-4">
+      <div className="max-w-7xl mx-auto h-full rounded-lg border-2 border-white shadow-lg overflow-y-auto p-4 bg-white">
+        <form
+          className="flex items-center h-8 bg-white rounded-md shadow-sm"
+          autoComplete="off"
+          onSubmit={handleCitySearch}
+        >
+          <label className="flex items-center justify-center h-full pl-4 text-blue-500">
             <Icon icon={search} size={20} />
           </label>
           <input
             type="text"
-            className="city-input"
+            className="flex-grow h-full px-4 outline-none text-sm"
             placeholder="Enter City"
             required
             value={city}
             onChange={(e) => setCity(e.target.value)}
             readOnly={loadings}
           />
-          <button type="submit">GO</button>
+          <button
+            type="submit"
+            className="w-20 h-full bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
+          >
+            GO
+          </button>
         </form>
 
-
-        <div className="current-weather-details-box">
-          <div className="details-box-header">
-            <h4>Current Weather</h4>
-
-            <div className="switch" onClick={toggleUnit}>
+        <div className="mt-4 bg-white rounded-md p-4">
+          <div className="flex justify-between items-center">
+            <h4 className="text-gray-500">Current Weather</h4>
+            <div
+              className="w-20 h-8 bg-blue-500 flex items-center p-1 rounded-md relative cursor-pointer"
+              onClick={toggleUnit}
+            >
               <div
-                className={`switch-toggle ${unit === "metric" ? "c" : "f"}`}
+                className={`w-1/2 h-full bg-white rounded-md transition-transform ${
+                  unit === "metric" ? "translate-x-0" : "translate-x-full"
+                }`}
               ></div>
-              <span className="c">C</span>
-              <span className="f">F</span>
+              <span className="absolute top-1.5 left-2 text-white">C</span>
+              <span className="absolute top-1.5 right-2 text-white">F</span>
             </div>
           </div>
+
           {loadings ? (
-            <div className="loader">
+            <div className="flex justify-center items-center mt-4">
               <SphereSpinner loadings={loadings} color="#2fa5ed" size={20} />
+            </div>
+          ) : citySearchData?.error ? (
+            <div className="mt-4 p-3 bg-red-100 text-red-800 border border-red-200 rounded-md">
+              {citySearchData.error}
             </div>
           ) : (
             <>
-              {citySearchData && citySearchData.error ? (
-                <div className="error-msg">{citySearchData.error}</div>
-              ) : (
-                <>
-                  {forecastError ? (
-                    <div className="error-msg">{forecastError}</div>
-                  ) : (
-                    <>
-                      {citySearchData && citySearchData.data ? (
-                        <div className="weather-details-container">
-                          <div className="details">
-                            <h4 className="city-name">
-                              {citySearchData.data.name}
-                            </h4>
-
-                            <div className="icon-and-temp">
-                              <img
-                                src={`https://openweathermap.org/img/wn/${citySearchData.data.weather[0].icon}@2x.png`}
-                                alt="icon"
-                              />
-                              <h1>{citySearchData.data.main.temp}&deg;</h1>
-                            </div>
-
-                            <h4 className="description">
-                              {citySearchData.data.weather[0].description}
-                            </h4>
-                          </div>
-
-                          <div className="metrices">
-                            <h4>
-                              Feels like {citySearchData.data.main.feels_like}
-                              &deg;C
-                            </h4>
-
-                            <div className="key-value-box">
-                              <div className="key">
-                                <Icon
-                                  icon={arrowUp}
-                                  size={20}
-                                  className="icon"
-                                />
-                                <span className="value">
-                                  {citySearchData.data.main.temp_max}
-                                  &deg;C
-                                </span>
-                              </div>
-                              <div className="key">
-                                <Icon
-                                  icon={arrowDown}
-                                  size={20}
-                                  className="icon"
-                                />
-                                <span className="value">
-                                  {citySearchData.data.main.temp_min}
-                                  &deg;C
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="key-value-box">
-                              <div className="key">
-                                <Icon
-                                  icon={droplet}
-                                  size={20}
-                                  className="icon"
-                                />
-                                <span>Humidity</span>
-                              </div>
-                              <div className="value">
-                                <span>
-                                  {citySearchData.data.main.humidity}%
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="key-value-box">
-                              <div className="key">
-                                <Icon icon={wind} size={20} className="icon" />
-                                <span>Wind</span>
-                              </div>
-                              <div className="value">
-                                <span>{citySearchData.data.wind.speed}kph</span>
-                              </div>
-                            </div>
-
-                            <div className="key-value-box">
-                              <div className="key">
-                                <Icon
-                                  icon={activity}
-                                  size={20}
-                                  className="icon"
-                                />
-                                <span>Pressure</span>
-                              </div>
-                              <div className="value">
-                                <span>
-                                  {citySearchData.data.main.pressure}
-                                  hPa
-                                </span>
-                              </div>
-                            </div>
-                          </div>
+              {citySearchData?.data && (
+                <div className="mt-4 flex flex-col md:flex-row md:divide-x md:divide-gray-300">
+                  <div className="flex-1 p-4">
+                    <h4 className="text-blue-500">
+                      {citySearchData.data.name}
+                    </h4>
+                    <div className="flex items-center mt-2">
+                      <img
+                        src={`https://openweathermap.org/img/wn/${citySearchData.data.weather[0].icon}@2x.png`}
+                        alt="icon"
+                        className="w-12 h-12"
+                      />
+                      <h1 className="text-4xl text-blue-500 ml-2">
+                        {citySearchData.data.main.temp}&deg;
+                      </h1>
+                    </div>
+                    <h4 className="text-gray-500 mt-2">
+                      {citySearchData.data.weather[0].description}
+                    </h4>
+                  </div>
+                  <div className="flex-1 p-4 space-y-4">
+                    <h4 className="text-blue-500">
+                      Feels like {citySearchData.data.main.feels_like}&deg;C
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <div className="text-gray-500">
+                          <Icon icon={arrowUp} size={20} />
+                          <span className="ml-2">Max</span>
                         </div>
-                      ) : (
-                        <div className="error-msg">No Data Found</div>
-                      )}
-                      <h4 className="extended-forecast-heading">
-                        Extended Forecast
-                      </h4>
-                      {filteredForecast.length > 0 ? (
-                        <div className="extended-forecasts-container">
-                          {filteredForecast.map((data, index) => {
-                            const date = new Date(data.dt_txt);
-                            const day = date.toLocaleDateString("en-US", {
-                              weekday: "short",
-                            });
-                            return (
-                              <div className="forecast-box" key={index}>
-                                <h5>{day}</h5>
-                                <img
-                                  src={`https://openweathermap.org/img/wn/${data.weather[0].icon}.png`}
-                                  alt="icon"
-                                />
-                                <h5>{data.weather[0].description}</h5>
-                                <h5 className="min-max-temp">
-                                  {data.main.temp_max}&deg; /{" "}
-                                  {data.main.temp_min}&deg;
-                                </h5>
-                              </div>
-                            );
-                          })}
+                        <span className="text-blue-500">
+                          {citySearchData.data.main.temp_max}&deg;C
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <div className="text-gray-500">
+                          <Icon icon={arrowDown} size={20} />
+                          <span className="ml-2">Min</span>
                         </div>
-                      ) : (
-                        <div className="error-msg">No Data Found</div>
-                      )}
-                    </>
-                  )}
-                </>
+                        <span className="text-blue-500">
+                          {citySearchData.data.main.temp_min}&deg;C
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <div className="text-gray-500">
+                          <Icon icon={droplet} size={20} />
+                          <span className="ml-2">Humidity</span>
+                        </div>
+                        <span className="text-blue-500">
+                          {citySearchData.data.main.humidity}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <div className="text-gray-500">
+                          <Icon icon={wind} size={20} />
+                          <span className="ml-2">Wind</span>
+                        </div>
+                        <span className="text-blue-500">
+                          {citySearchData.data.wind.speed} kph
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <div className="text-gray-500">
+                          <Icon icon={activity} size={20} />
+                          <span className="ml-2">Pressure</span>
+                        </div>
+                        <span className="text-blue-500">
+                          {citySearchData.data.main.pressure} hPa
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
+              <h4 className="text-gray-500 mt-6">Extended Forecast</h4>
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-5 gap-4">
+                {filteredForecast.map((data, index) => {
+                  const date = new Date(data.dt_txt);
+                  const day = date.toLocaleDateString("en-US", {
+                    weekday: "short",
+                  });
+                  return (
+                    <div
+                      key={index}
+                      className="flex flex-col items-center p-4 bg-blue-500 text-white rounded-lg shadow"
+                    >
+                      <h5>{day}</h5>
+                      <img
+                        src={`https://openweathermap.org/img/wn/${data.weather[0].icon}.png`}
+                        alt="icon"
+                        className="w-12 h-12"
+                      />
+                      <h5>{data.weather[0].description}</h5>
+                      <h5 className="mt-2 font-medium">
+                        {data.main.temp_max}&deg; / {data.main.temp_min}&deg;
+                      </h5>
+                    </div>
+                  );
+                })}
+              </div>
             </>
           )}
         </div>
