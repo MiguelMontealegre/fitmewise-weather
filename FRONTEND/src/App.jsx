@@ -17,7 +17,6 @@ function App() {
     citySearchData,
     forecastLoading,
     forecastData,
-    forecastError,
   } = useSelector((state) => state.weather);
 
   const [loadings, setLoadings] = useState(true);
